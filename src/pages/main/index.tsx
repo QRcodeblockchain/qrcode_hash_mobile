@@ -44,7 +44,7 @@ const Main: React.FC<{navigation: any}> = ({navigation}) => {
             tabPress: () => handleChangeTab(route.name),
           })}
           screenOptions={({route}) => ({
-            tabBarActiveTintColor: '#009788',
+            tabBarActiveTintColor: '#967BB6',
             tabBarInactiveTintColor: 'black',
             tabBarStyle: {
               paddingBottom: 5,
@@ -54,7 +54,7 @@ const Main: React.FC<{navigation: any}> = ({navigation}) => {
             tabBarBackground: () => (
               <View
                 style={{
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: '#967BB6',
                   flex: 1,
                 }}
               />

@@ -19,7 +19,7 @@ export const Login: React.FC<{navigation: any}> = () => {
   };
   return (
     <View
-      style={{flex: 1, backgroundColor: '#009788', justifyContent: 'center'}}>
+      style={{flex: 1, backgroundColor: '#967BB6', justifyContent: 'center'}}>
       <View style={{width: '100%'}}>
         <Text
           style={{

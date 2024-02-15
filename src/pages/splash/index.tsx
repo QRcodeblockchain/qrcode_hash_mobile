@@ -39,7 +39,7 @@ const Splash: React.FC<{navigation: any}> = () => {
   useEffect(() => {
     setTimeout(() => {
       setAnimating(false);
-      navigation.navigate('Auth');
+      navigation.navigate('Main');
     }, 2000);
   }, []);
 
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#009788',
+    backgroundColor: '#967BB6',
   },
   activityIndicator: {
     alignItems: 'center',

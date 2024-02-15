@@ -95,8 +95,8 @@ export const Settings = (): JSX.Element => {
               </View>
               <Switch
                 style={{flex: 1}}
-                trackColor={{false: 'grey', true: '#00978855'}}
-                thumbColor={data.settingState ? '#009788' : 'white'}
+                trackColor={{false: 'grey', true: '#967BB655'}}
+                thumbColor={data.settingState ? '#967BB6' : 'white'}
                 onValueChange={() => toggleSwitch(index, data.settingState)}
                 value={data.settingState}
               />

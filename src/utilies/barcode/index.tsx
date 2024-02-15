@@ -42,6 +42,7 @@ const BarCode: React.FC<DashboardProps> = ({
       setIsScanning(false);
       const data = event.data;
       setResult((prevValues: string[]) => [...prevValues, data]);
+      console.log('===========result===========', result);
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
@@ -78,7 +79,7 @@ const BarCode: React.FC<DashboardProps> = ({
           }}
           type={RNCamera.Constants.Type.back}
           captureAudio={false}
-          barCodeTypes={[RNCamera.Constants.BarCodeType.code128]}
+          barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
           onBarCodeRead={handleBarcodeRead}
           // autoFocus={RNCamera.Constants.AutoFocus.on}
         ></RNCamera>
@@ -107,7 +108,7 @@ const BarCode: React.FC<DashboardProps> = ({
               marginVertical: 5,
               padding: 5,
               borderRadius: 24,
-              backgroundColor: '#009788',
+              backgroundColor: '#967BB6',
               textAlignVertical: 'center',
             }}>
             {subresult}

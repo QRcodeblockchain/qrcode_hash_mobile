@@ -30,7 +30,7 @@ const GroupButton: React.FC<DashboardProps> = ({scanMethod, setScanMethod}) => {
           style={[
             styles.buttonText,
             scanMethod === true && styles.buttonTextSelected,
-            scanMethod === false ? {color: 'white'} : {color: '#009788'},
+            scanMethod === false ? {color: 'white'} : {color: '#967BB6'},
           ]}>
           {buttons[0].label}
         </Text>
@@ -66,10 +66,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   buttonSelected: {
-    backgroundColor: '#009788',
+    backgroundColor: '#967BB6',
   },
   buttonText: {
-    color: '#009788',
+    color: '#967BB6',
     fontSize: 14,
     fontWeight: 'bold',
     alignSelf: 'center',

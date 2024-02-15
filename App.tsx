@@ -21,7 +21,7 @@ LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 type RootStackParamList = {
   Splash: undefined;
-  Auth: undefined;
+  // Auth: undefined;
   Main: undefined;
 };
 

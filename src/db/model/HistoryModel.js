@@ -1,21 +1,40 @@
 import {db, executeQuery} from '../../db/utils/DataBase';
 import {getCurrentDateTime} from '../../utilies/DateUtils';
+import axios from '../utils/axios';
+
+// ----------------------------------------------------------------------
 
 const HistoryModel = {
   create: async barCode => {
     const createdAt = getCurrentDateTime();
     const updatedAt = createdAt;
-
-    const query =
-      'INSERT INTO history (barCode, createdAt, updatedAt) VALUES (?, ?, ?)';
-    const params = [barCode, createdAt, updatedAt];
-
+    console.log('33333333333333333333333', barCode);
+    const param = {
+      body: barCode,
+    };
     try {
-      const {insertId} = await executeQuery(query, params);
-      return {id: insertId, barCode, createdAt, updatedAt};
+      const response = await axios.post('/api/qrcode/scan', param);
+      // const res = await fetch('http://192.168.105.59:3311/api/qrcode/scan', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify(barCode),
+      // });
+      console.log('3434343434343434', response);
+      const query =
+        'INSERT INTO history (barCode, createdAt, updatedAt) VALUES (?, ?, ?)';
+      const params = [barCode, createdAt, updatedAt];
+      try {
+        const {insertId} = await executeQuery(query, params);
+        return {id: insertId, barCode, createdAt, updatedAt};
+      } catch (error) {
+        console.error('Failed to create history:', error);
+        return null;
+      }
     } catch (error) {
-      console.error('Failed to create history:', error);
-      return null;
+      console.error('Failed to Connect API:', JSON.stringify(error));
+      return;
     }
   },
 

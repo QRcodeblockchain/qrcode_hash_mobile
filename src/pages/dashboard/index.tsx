@@ -14,7 +14,6 @@ export const Dashboard = (): JSX.Element => {
   const navigation = useNavigation<any>();
   const {strings} = useContext(LanguageContext);
   const [isScanning, setIsScanning] = useState(false);
-  const [scanMethod, setScanMethod] = useState(false);
   const [result, setResult] = useState<string[]>([]);
   const [isPressed, setIsPressed] = useState(false);
 
@@ -22,6 +21,7 @@ export const Dashboard = (): JSX.Element => {
   const onPressOut = () => setIsPressed(false);
 
   const goToDetailsScreen = () => {
+    console.log('3434343434', result);
     for (let i = 0; i < result.length; i++) {
       HistoryModel.create(result[i]);
     }
@@ -30,15 +30,9 @@ export const Dashboard = (): JSX.Element => {
   };
 
   const goToScaning = () => {
+    //
+    console.log('----goToScaning-------');
     setIsScanning(true);
-  };
-
-  const insertResult = () => {
-    for (let i = 0; i < result.length; i++) {
-      HistoryModel.create(result[i]);
-    }
-    setResult([]);
-    navigation.navigate('History');
   };
 
   useEffect(() => {}, []);
@@ -47,7 +41,10 @@ export const Dashboard = (): JSX.Element => {
     <Animated.View style={{flex: 1}}>
       <TopBar text={strings.Dashboard} />
       <View style={{flex: 1, flexDirection: 'column', paddingHorizontal: 10}}>
-        <GroupButton scanMethod={scanMethod} setScanMethod={setScanMethod} />
+        {/* <GroupButton scanMethod={scanMethod} setScanMethod={setScanMethod} /> */}
+        <Text style={{color: '#967BB6', fontSize: mediumFontSize}}>
+          {strings.ScanQR}
+        </Text>
         <View
           style={{
             marginHorizontal: 10,
@@ -72,18 +69,18 @@ export const Dashboard = (): JSX.Element => {
             paddingHorizontal: 10,
             gap: 10,
           }}>
-          {scanMethod && (
+          <>
             <Button
               style={[
                 isScanning
                   ? {backgroundColor: 'grey'}
-                  : {backgroundColor: '#009788'},
+                  : {backgroundColor: '#967BB6'},
                 {
                   flex: 1,
                   justifyContent: 'center',
                 },
               ]}
-              onPress={insertResult}
+              onPress={goToScaning}
               onPressIn={onPressIn}
               disabled={isScanning ? true : false}
               onPressOut={onPressOut}>
@@ -91,42 +88,20 @@ export const Dashboard = (): JSX.Element => {
                 {strings.FinishBatch}
               </Text>
             </Button>
-          )}
-          {!scanMethod && (
-            <>
-              <Button
-                style={[
-                  isScanning
-                    ? {backgroundColor: 'grey'}
-                    : {backgroundColor: '#009788'},
-                  {
-                    flex: 1,
-                    justifyContent: 'center',
-                  },
-                ]}
-                onPress={goToScaning}
-                onPressIn={onPressIn}
-                disabled={isScanning ? true : false}
-                onPressOut={onPressOut}>
-                <Text style={{color: 'white', fontSize: mediumFontSize}}>
-                  {strings.FinishBatch}
-                </Text>
-              </Button>
-              <Button
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  backgroundColor: '#009788',
-                }}
-                onPress={goToDetailsScreen}
-                onPressIn={onPressIn}
-                onPressOut={onPressOut}>
-                <Text style={{color: 'white', fontSize: mediumFontSize}}>
-                  {strings.ReviewAndConfirm}
-                </Text>
-              </Button>
-            </>
-          )}
+            <Button
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                backgroundColor: '#967BB6',
+              }}
+              onPress={goToDetailsScreen}
+              onPressIn={onPressIn}
+              onPressOut={onPressOut}>
+              <Text style={{color: 'white', fontSize: mediumFontSize}}>
+                {strings.ReviewAndConfirm}
+              </Text>
+            </Button>
+          </>
         </View>
       </View>
     </Animated.View>

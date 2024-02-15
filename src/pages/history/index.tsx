@@ -158,7 +158,7 @@ export const History = ({route}: any): JSX.Element => {
             width: '100%',
             justifyContent: 'center',
             marginBottom: 10,
-            backgroundColor: '#009788',
+            backgroundColor: '#967BB6',
           }}
           onPress={goToDetailsScreen}
           onPressIn={onPressIn}
