@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.VIBRATE"/>
   <uses-permission android:name="android.permission.WAKE_LOCK"/>
   <application android:name=".MainApplication" android:label="@string/app_name" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:allowBackup="false" android:theme="@style/AppTheme">
-    <service android:name="org.pgsqlite.SQLitePlugin" android:exported="false"/>
+    <!-- <service android:name="org.pgsqlite.SQLitePlugin" android:exported="false"/> -->
     <meta-data android:name="com.google.android.gms.vision.DEPENDENCIES" android:value="barcode"/>
     <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
     <meta-data android:name="expo.modules.updates.ENABLED" android:value="false"/>

@@ -1,23 +1,12 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  StatusBar,
-  View,
-  Image,
-  Text,
-  TextInput,
-  Dimensions,
-  ScrollView,
-  StyleSheet,
-} from 'react-native';
-import {Avatar, Button, Card} from 'react-native-paper';
+import {View, Dimensions, StyleSheet} from 'react-native';
 import {RNCamera, BarCodeType, BarCodeReadEvent} from 'react-native-camera';
-import {smallFontSize, mediumFontSize} from '../../styles';
 
 interface DashboardProps {
   isScanning: boolean;
   setIsScanning: React.Dispatch<React.SetStateAction<boolean>>;
-  result: string[];
-  setResult: React.Dispatch<React.SetStateAction<string[]>>;
+  result: string;
+  setResult: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const BarCode: React.FC<DashboardProps> = ({
@@ -33,16 +22,11 @@ const BarCode: React.FC<DashboardProps> = ({
 
   useEffect(() => {}, []);
 
-  // const handleBarcodeScanning = () => {
-  //   setIsScanning(true);
-  // };
-
   const handleBarcodeRead = (event: BarCodeReadEvent) => {
     if (isScanning) {
       setIsScanning(false);
       const data = event.data;
-      setResult((prevValues: string[]) => [...prevValues, data]);
-      console.log('===========result===========', result);
+      setResult(data);
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
@@ -80,9 +64,7 @@ const BarCode: React.FC<DashboardProps> = ({
           type={RNCamera.Constants.Type.back}
           captureAudio={false}
           barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
-          onBarCodeRead={handleBarcodeRead}
-          // autoFocus={RNCamera.Constants.AutoFocus.on}
-        ></RNCamera>
+          onBarCodeRead={handleBarcodeRead}></RNCamera>
         {success && (
           <View
             style={{
@@ -93,28 +75,6 @@ const BarCode: React.FC<DashboardProps> = ({
             }}></View>
         )}
       </View>
-
-      <ScrollView style={{flex: 1, marginHorizontal: 10}}>
-        {result?.map((subresult, index) => (
-          <Text
-            key={index}
-            style={{
-              flex: 1,
-              height: 50,
-              fontSize: mediumFontSize,
-              color: 'white',
-              textAlign: 'center',
-              width: '100%',
-              marginVertical: 5,
-              padding: 5,
-              borderRadius: 24,
-              backgroundColor: '#967BB6',
-              textAlignVertical: 'center',
-            }}>
-            {subresult}
-          </Text>
-        ))}
-      </ScrollView>
     </View>
   );
 };
