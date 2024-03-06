@@ -1,6 +1,12 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, Modal, Pressable, StyleSheet, Dimensions} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {
+  View,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Dimensions,
+  BackHandler,
+} from 'react-native';
 import {mediumFontSize} from '../../styles';
 import TopBar from '../../components/TopBar';
 import Splash from '../../pages/splash';
@@ -22,14 +28,12 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 
 export const Dashboard = (): JSX.Element => {
-  const navigation = useNavigation<any>();
   const {strings} = useContext(LanguageContext);
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState('');
   const [isPressed, setIsPressed] = useState(false);
   const [isLoading, setIsLoading] = useState(Boolean);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [modalContent, setModalContent] = useState('');
   const [modal, setModal] = useState('');
 
   const onPressIn = () => setIsPressed(true);
@@ -37,20 +41,32 @@ export const Dashboard = (): JSX.Element => {
   const goToDetailsScreen = async () => {
     setIsLoading(true);
     setIsScanning(true);
-    console.log('3434343434', result);
     const response = await HistoryModel.create(result);
     setIsLoading(false);
     setModal(JSON.stringify(response.result));
-    // setModalContent(JSON.stringify(response.param)); // Setting the content to be shown in the modal
     setModalVisible(true); // Show the modal
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      BackHandler.exitApp();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    // Clean up the event listener on component unmount
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {}, []);
 
   return (
     <>
       {isLoading ? (
-        // Show splash screen when isLoading is true
         <Splash navigation={undefined} />
       ) : (
         <Animated.View style={{flex: 1}}>
@@ -115,11 +131,6 @@ export const Dashboard = (): JSX.Element => {
                       {modal}
                     </Text>
                   </Pressable>
-                  {/* <Pressable style={[styles.Button, styles.ButtonReadyApply]}> */}
-                  {/* <Text style={[styles.TextStyle, styles.TextReadyApply]}>
-                      {modalContent}
-                    </Text> */}
-                  {/* </Pressable> */}
                   <Pressable
                     style={[styles.Button, styles.ButtonCancel]}
                     onPress={() => setModalVisible(false)}>

@@ -59,7 +59,7 @@ const BarCode: React.FC<DashboardProps> = ({
             height: cameraHeight,
             alignSelf: 'center',
             flex: 1,
-            transform: [{rotate: '90deg'}],
+            // transform: [{rotate: '90deg'}],
           }}
           type={RNCamera.Constants.Type.back}
           captureAudio={false}

@@ -6,7 +6,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {PaperProvider} from 'react-native-paper';
 import {Dashboard} from '../dashboard';
 
-import {initMQTT} from '../../utilies/mqtt';
+// import {initMQTT} from '../../utilies/mqtt';
 import LanguageContext from '../../Context/LanguageContext';
 
 const dashboardIcon = require('../../../assets/icons/bottomMenu/settings.png');
@@ -26,9 +26,9 @@ const Main: React.FC<{navigation: any}> = ({navigation}) => {
     setCurrentTab(tabName);
   };
 
-  useEffect(() => {
-    initMQTT();
-  }, []);
+  // useEffect(() => {
+  //   initMQTT();
+  // }, []);
 
   useEffect(() => {}, [currentTab]);
   return (

@@ -54,7 +54,6 @@ const TabBar: React.FC<TabBarProps> = ({state, descriptors, navigation}) => {
 
       <View style={{flexDirection: 'row', width: 40}}>
         {state.routes.map((route: any, index: number) => {
-          console.log(state);
           const {options} = descriptors[route.key];
           const label = options.tabBarLabel || route.name;
           const isFocused = state.index === index;

@@ -21,7 +21,7 @@ const Fpage: React.FC<{navigation: any}> = () => {
     setTimeout(() => {
       setAnimating(false);
       navigation.navigate('Main');
-    }, 5000);
+    }, 2000);
   }, []);
 
   useEffect(() => {
