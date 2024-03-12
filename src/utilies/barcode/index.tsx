@@ -10,13 +10,12 @@ interface DashboardProps {
 }
 
 const BarCode: React.FC<DashboardProps> = ({
-  isScanning,
-  setIsScanning,
   result,
   setResult,
+  setIsScanning,
+  isScanning,
 }) => {
   const cameraRef = useRef<RNCamera | null>(null);
-  const [success, setSuccess] = useState(false);
 
   let barcodeTimeout: NodeJS.Timeout | null = null;
 
@@ -27,10 +26,6 @@ const BarCode: React.FC<DashboardProps> = ({
       setIsScanning(false);
       const data = event.data;
       setResult(data);
-      setSuccess(true);
-      setTimeout(() => {
-        setSuccess(false);
-      }, 2000);
     }
   };
 
@@ -65,15 +60,6 @@ const BarCode: React.FC<DashboardProps> = ({
           captureAudio={false}
           barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
           onBarCodeRead={handleBarcodeRead}></RNCamera>
-        {success && (
-          <View
-            style={{
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              backgroundColor: 'white',
-            }}></View>
-        )}
       </View>
     </View>
   );

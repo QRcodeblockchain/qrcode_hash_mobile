@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   BackHandler,
+  Alert,
 } from 'react-native';
 import {mediumFontSize} from '../../styles';
 import TopBar from '../../components/TopBar';
@@ -26,21 +27,33 @@ import {FONT_REGULAR} from '../../constants/fonts';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
+const aspectRatio = width / height;
+const baseWidth = 375;
+const scale =
+  aspectRatio >= 0.65 && aspectRatio <= 0.85
+    ? (width / baseWidth) * 1.2
+    : width / baseWidth;
+const dynamicFontSize = (size: number) => size * scale;
 
 export const Dashboard = (): JSX.Element => {
   const {strings} = useContext(LanguageContext);
   const [isScanning, setIsScanning] = useState(false);
   const [result, setResult] = useState('');
-  const [isPressed, setIsPressed] = useState(false);
-  const [isLoading, setIsLoading] = useState(Boolean);
+  // const [isPressed, setIsPressed] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modal, setModal] = useState('');
 
-  const onPressIn = () => setIsPressed(true);
-  const onPressOut = () => setIsPressed(false);
+  // const onPressOut = () => setIsPressed(false);
+  // const onPressIn = () => setIsPressed(true);
   const goToDetailsScreen = async () => {
     setIsLoading(true);
     setIsScanning(true);
+    if (result === null || result.length !== 64) {
+      setModal(JSON.stringify('Invalid QR. Please try again.'));
+      setIsLoading(false);
+      setModalVisible(true);
+    }
     const response = await HistoryModel.create(result);
     setIsLoading(false);
     setModal(JSON.stringify(response.result));
@@ -108,8 +121,9 @@ export const Dashboard = (): JSX.Element => {
                     backgroundColor: '#967BB6',
                   }}
                   onPress={goToDetailsScreen}
-                  onPressIn={onPressIn}
-                  onPressOut={onPressOut}>
+                  // onPressIn={goToDetailsScreen}
+                  // onPressOut={goToDetailsScreen}
+                >
                   <Text style={{color: 'white', fontSize: mediumFontSize}}>
                     {strings.ReviewAndConfirm}
                   </Text>
@@ -190,11 +204,11 @@ const styles = StyleSheet.create({
   },
   ButtonApply: {
     backgroundColor: COLOR_PINK,
-    marginTop: 20,
+    marginTop: 10,
   },
   TextStyle: {
     fontFamily: FONT_REGULAR,
-    fontSize: 16,
+    fontSize: dynamicFontSize(16),
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
