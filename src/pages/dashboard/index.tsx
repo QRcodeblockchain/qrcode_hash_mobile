@@ -1,19 +1,19 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useRef} from 'react';
 import {
   View,
   Modal,
+  Alert,
   Pressable,
   StyleSheet,
   Dimensions,
   BackHandler,
-  Alert,
 } from 'react-native';
+import {RNCamera, BarCodeType, BarCodeReadEvent} from 'react-native-camera';
 import {mediumFontSize} from '../../styles';
 import TopBar from '../../components/TopBar';
 import Splash from '../../pages/splash';
 import {Button, Text} from 'react-native-paper';
 import Animated from 'react-native-reanimated';
-import BarCode from '../../utilies/barcode';
 import HistoryModel from '../../db/model/HistoryModel';
 import LanguageContext from '../../Context/LanguageContext';
 import {
@@ -38,26 +38,43 @@ const dynamicFontSize = (size: number) => size * scale;
 export const Dashboard = (): JSX.Element => {
   const {strings} = useContext(LanguageContext);
   const [isScanning, setIsScanning] = useState(false);
-  const [result, setResult] = useState('');
+  const [result, setResult] = useState<string>('');
   // const [isPressed, setIsPressed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [modal, setModal] = useState('');
+  const cameraRef = useRef<RNCamera | null>(null);
 
-  // const onPressOut = () => setIsPressed(false);
-  // const onPressIn = () => setIsPressed(true);
-  const goToDetailsScreen = async () => {
-    setIsLoading(true);
-    setIsScanning(true);
-    if (result === null || result.length !== 64) {
-      setModal(JSON.stringify('Invalid QR. Please try again.'));
-      setIsLoading(false);
-      setModalVisible(true);
+  const handleBarcodeRead = (event: BarCodeReadEvent) => {
+    if (isScanning) {
+      setIsScanning(false);
+      const data = event.data;
+      setResult(data);
+      goToDetailsScreen(data); // Pass scan result directly to the next step
     }
-    const response = await HistoryModel.create(result);
-    setIsLoading(false);
-    setModal(JSON.stringify(response.result));
-    setModalVisible(true); // Show the modal
+  };
+
+
+  const goToDetailsScreen = async (scanResult: string) => {
+    setIsLoading(true);
+    try {
+      const response = await HistoryModel.create(scanResult);
+      // Using Alert instead of modal
+      Alert.alert(
+        'Scan Result', // Title of the alert
+        JSON.stringify(response.result), // Message to display
+        [
+          {text: 'OK', onPress: () => console.log('OK Pressed')}, // Button to dismiss the alert
+          // You can add more buttons if needed
+        ],
+      );
+    } catch (error) {
+      console.error('Failed to Scan', error);
+      // Handle error differently if needed, for instance, showing the error message using Alert
+      Alert.alert('Error', 'Failed to Scan.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -74,6 +91,19 @@ export const Dashboard = (): JSX.Element => {
     // Clean up the event listener on component unmount
     return () => backHandler.remove();
   }, []);
+
+  const aspectRatio = 4 / 9;
+  const windowWidth = Dimensions.get('window').width;
+  const windowHeight = Dimensions.get('window').height;
+  let cameraWidth, cameraHeight;
+
+  if (windowWidth / windowHeight > aspectRatio) {
+    cameraHeight = windowHeight * 0.7; // Set the desired height
+    cameraWidth = cameraHeight * aspectRatio; // Calculate width based on aspect ratio
+  } else {
+    cameraWidth = windowWidth * 0.7; // Set the desired width
+    cameraHeight = cameraWidth / aspectRatio; // Calculate height based on aspect ratio
+  }
 
   useEffect(() => {}, []);
 
@@ -97,11 +127,18 @@ export const Dashboard = (): JSX.Element => {
                 width: '100%',
                 flex: 1,
               }}>
-              <BarCode
-                result={result}
-                setResult={setResult}
-                setIsScanning={setIsScanning}
-                isScanning={isScanning}
+              <RNCamera
+                ref={ref => (cameraRef.current = ref)}
+                style={{
+                  width: cameraWidth,
+                  height: cameraHeight,
+                  alignSelf: 'center',
+                  flex: 1,
+                }}
+                type={RNCamera.Constants.Type.back}
+                captureAudio={false}
+                barCodeTypes={[RNCamera.Constants.BarCodeType.qr]}
+                onBarCodeRead={handleBarcodeRead}
               />
             </View>
             <View
@@ -120,10 +157,10 @@ export const Dashboard = (): JSX.Element => {
                     justifyContent: 'center',
                     backgroundColor: '#967BB6',
                   }}
-                  onPress={goToDetailsScreen}
-                  // onPressIn={goToDetailsScreen}
-                  // onPressOut={goToDetailsScreen}
-                >
+                  onPress={() => {
+                    setIsScanning(true); // Enable scanning when button is pressed
+                    console.log('Start scanning...');
+                  }}>
                   <Text style={{color: 'white', fontSize: mediumFontSize}}>
                     {strings.ReviewAndConfirm}
                   </Text>
